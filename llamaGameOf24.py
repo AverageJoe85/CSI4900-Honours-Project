@@ -26,7 +26,8 @@ tools = [{
                     "description": "Second number in the step's equation."
                 },
                 "remaining_numbers": {
-                    "type": "string",
+                    "type": "array",
+                    "items": { "type": "integer" },
                     "description": "The numbers left to be used, including the result of this step's equation."
                 }
             },
@@ -42,7 +43,7 @@ completion = client.chat.completions.create(
     model="llama3.1-8b", #some models break with the "strict": true parameter, this model seems fine (for now)
     messages=[
         {
-            "role": "developer",
+            "role": "system",
             "content": "You are an expert in solving game of 24 steps."},
         {
             "role": "user",
