@@ -44,7 +44,8 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are an expert in solving game of 24 steps."},
+            "content": "You are an expert in solving game of 24 steps."
+        },
         {
             "role": "user",
             "content": "Provide a potential first step of the game of 24 with these numbers: (4 9 10 13)."
