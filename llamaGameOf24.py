@@ -1,5 +1,6 @@
 from openai import OpenAI
 from apiKey import apiKey
+import json
 
 client = OpenAI(
     api_key=apiKey
@@ -9,7 +10,7 @@ tools = [{
     "type": "function",
     "function": {
         "name": "game_24_step",
-        "description": "One step of game of 24. Each step consists of one equation (ex. a+b=c), and the remaining numbers (ex. c, d, e).",
+        "description": "One step of game of 24.",
         "parameters": {
             "type": "object", #what other types are there? Should this be changed?
             "properties": {
@@ -19,7 +20,7 @@ tools = [{
                 },
                 "operator": {
                     "type": "string",
-                    "description": "The operator used for this step's equation."
+                    "description": "The operator used for this step's equation (possible operators: +, -, *, /)."
                 },
                 "number_y": {
                     "type": "integer",
@@ -38,14 +39,14 @@ tools = [{
             "required": [
                 "number_x", "operator", "number_y", "number_z", "remaining_numbers"
             ],
-            "additionalProperties": False #required, but what does this do?
+            "additionalProperties": False #required due to strict: True I believe, but what does this do exactly?
         },
         "strict": True
     }
 }]
 
 completion = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4o-mini", #https://platform.openai.com/docs/pricing
     messages=[
         {
             "role": "system",
@@ -59,4 +60,16 @@ completion = client.chat.completions.create(
     tools = tools #required
 )
 
-print(completion.choices[0].message.tool_calls)
+# ===========TODO=============
+# Function
+def game24(number_x, operator, number_y, number_z, remaining_numbers):
+    pass
+
+
+# Passing the output to a function
+tool_call = completion.choices[0].message.tool_calls[0]
+args = json.loads(tool_call.function.arguments)
+
+#result = game24(args["number_x"], args["operator"], args["number_y"], args["number_z"], args["remaining_numbers"])
+
+print(completion.choices[0].message.tool_calls[0])
