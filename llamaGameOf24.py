@@ -1,50 +1,55 @@
 from openai import OpenAI
 from apiKey import apiKey
+
 client = OpenAI(
-    api_key=apiKey,
-    base_url="https://api.llama-api.com" #required
+    api_key=apiKey
 )
 
 tools = [{
     "type": "function",
     "function": {
         "name": "game_24_step",
-        "description": "One step of game of 24 in a specific format. Each step consists of one equation (ex. a+b=c), and the remaining numbers (ex. c, d, e).",
+        "description": "One step of game of 24. Each step consists of one equation (ex. a+b=c), and the remaining numbers (ex. c, d, e).",
         "parameters": {
             "type": "object", #what other types are there? Should this be changed?
             "properties": {
-                "first_number": {
+                "number_x": {
                     "type": "integer",
-                    "description": "First number in the step's equation."
+                    "description": "One of the given numbers."
                 },
                 "operator": {
                     "type": "string",
-                    "description": "The operator used in the step's equation."
+                    "description": "The operator used for this step's equation."
                 },
-                "second_number": {
+                "number_y": {
                     "type": "integer",
-                    "description": "Second number in the step's equation."
+                    "description": "Another of the given numbers."
+                },
+                "number_z": {
+                    "type": "integer",
+                    "description": "The result of number_x operator number_y."
                 },
                 "remaining_numbers": {
                     "type": "array",
                     "items": { "type": "integer" },
-                    "description": "The numbers left to be used, including the result of this step's equation."
+                    "description": "Unused numbers."
                 }
             },
             "required": [
-                "first_number", "operator", "second_number", "remaining_numbers"
+                "number_x", "operator", "number_y", "number_z", "remaining_numbers"
             ],
+            "additionalProperties": False #required, but what does this do?
         },
         "strict": True
     }
 }]
 
 completion = client.chat.completions.create(
-    model="llama3.1-8b", #some models break with the "strict": true parameter, this model seems fine (for now)
+    model="gpt-4o-mini",
     messages=[
         {
             "role": "system",
-            "content": "You are an expert in solving game of 24 steps."
+            "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24. Therefore there will be exactly 3 steps to the game of 24."
         },
         {
             "role": "user",
