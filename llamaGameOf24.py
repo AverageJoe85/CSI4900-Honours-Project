@@ -9,7 +9,7 @@ useLlamaAPI = 0
 startTime = time.time()
 
 if useLlamaAPI:
-    model = "llama3.1-70b" #llama3.1-70b
+    model = "llama3.1-70b" #Models that work: llama3.1-70b
     print("Using LlamaAPI with model: " + model + "\n")
     client = OpenAI(
         api_key=apiKey,
