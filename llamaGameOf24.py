@@ -1,27 +1,28 @@
 from openai import OpenAI
-from apiKey import apiKey, apiKeyOpenAI #create apiKey.py which has apiKey set as your LlamaAPI key and apiKeyOpenAI set as your OpenAI key (set to empty string if doesn't exist)
 import json
 import time
+# create apiKey.py (either variable can be set as blank string if needed):
+#apiKey="LA-..."
+#apiKeyOpenAI="sk-proj-..."
+import apiKey
 
-# 0 = OpenAI, 1 = LlamaAPI
-useLlamaAPI = 0
-
-startTime = time.time()
-
+useLlamaAPI = 0 #0 = OpenAI, 1 = LlamaAPI
 if useLlamaAPI:
-    model = "llama3.1-70b" #Models that work: llama3.1-70b
+    model = "llama3.1-70b"
     print("Using LlamaAPI with model: " + model + "\n")
     client = OpenAI(
-        api_key=apiKey,
+        api_key=apiKey.apiKey,
         base_url="https://api.llama-api.com"
     )
 else:
-    model = "gpt-4o-mini"
+    model = "gpt-4o-mini" #https://platform.openai.com/docs/pricing
     print("Using OpenAI with model: " + model + "\n")
     client = OpenAI(
-        api_key=apiKeyOpenAI
+        api_key=apiKey.apiKeyOpenAI
     )
 
+# Used for knowing how long you'll have to wait on subsequent runs
+startTime = time.time()
 
 tools = [
     {
@@ -70,7 +71,7 @@ tools = [
 ]
 
 completion = client.chat.completions.create(
-    model = model, #https://platform.openai.com/docs/pricing
+    model = model,
     messages=[
         {
             "role": "system",
@@ -100,12 +101,21 @@ def game24(number_x, operator, number_y, number_z, remaining_numbers):
 
 
 print("Number of tool calls: " + str(len(completion.choices[0].message.tool_calls)) + "\n") #number of tool calls should be 1 for efficiency
-print(completion.choices[0].message.tool_calls[0])
+print("input_numbers: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["input_numbers"]))
+print("number_x: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_x"]))
+print("operator: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["operator"]))
+print("number_y: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_y"]))
+print("=")
+print("number_z: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_z"]))
+print("remaining_numbers: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["remaining_numbers"]))
 
 # Passing the output to a function
 tool_call = completion.choices[0].message.tool_calls[0]
 args = json.loads(tool_call.function.arguments)
 result = game24(args["number_x"], args["operator"], args["number_y"], args["number_z"], args["remaining_numbers"])
 
+
+
+# Used for knowing how long you'll have to wait on subsequent runs
 endTime = time.time()
 print("\nExecution Time: " + str(endTime - startTime) + " seconds")
