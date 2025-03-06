@@ -99,22 +99,19 @@ if not completion.choices[0].message.tool_calls:
 def game24(number_x, operator, number_y, number_z, remaining_numbers):
     pass
 
-
-print("Number of tool calls: " + str(len(completion.choices[0].message.tool_calls)) + "\n") #number of tool calls should be 1 for efficiency
-print("input_numbers: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["input_numbers"]))
-print("number_x: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_x"]))
-print("operator: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["operator"]))
-print("number_y: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_y"]))
-print("=")
-print("number_z: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["number_z"]))
-print("remaining_numbers: " + str(json.loads(completion.choices[0].message.tool_calls[0].function.arguments)["remaining_numbers"]))
-
 # Passing the output to a function
 tool_call = completion.choices[0].message.tool_calls[0]
 args = json.loads(tool_call.function.arguments)
 result = game24(args["number_x"], args["operator"], args["number_y"], args["number_z"], args["remaining_numbers"])
 
-
+print("Number of tool calls: " + str(len(completion.choices[0].message.tool_calls)) + "\n") #number of tool calls should be 1 for efficiency
+print("input_numbers: " + str(args["input_numbers"]))
+print("number_x: " + str(args["number_x"]))
+print("operator: " + str(args["operator"]))
+print("number_y: " + str(args["number_y"]))
+print("=")
+print("number_z: " + str(args["number_z"]))
+print("remaining_numbers: " + str(args["remaining_numbers"]))
 
 # Used for knowing how long you'll have to wait on subsequent runs
 endTime = time.time()
