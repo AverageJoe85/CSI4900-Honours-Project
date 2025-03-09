@@ -66,7 +66,7 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24. The user will tell you the input numbers and you will give potential next steps."
+            "content": "Use exactly 1 tool call per message. You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24. The user will tell you the input numbers and you will give a potential next step."
         },
         {
             "role": "user",
@@ -74,7 +74,8 @@ completion = client.chat.completions.create(
         }
     ],
     tools = tools, #required
-    tool_choice= "required"
+    tool_choice= "required",
+    max_tokens=60 #forces the completion to end at 60 tokens (forces only a single tool call since 1 is about 50 tokens)
 )
 
 
@@ -100,4 +101,7 @@ print("remaining_numbers: " + str(args["remaining_numbers"]))
 
 # Used for knowing how long you'll have to wait on subsequent runs
 endTime = time.time()
-print("\nExecution Time: " + str(endTime - startTime) + " seconds")
+print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime-startTime)/60) + " minutes")
+
+#debugging to see all tool calls
+open("debugOutput.txt", "w").write(json.dumps(completion.model_dump(),indent=4))
