@@ -15,7 +15,7 @@ if useLlamaAPI:
         base_url="https://api.llama-api.com"
     )
 else:
-    model = "gpt-4o-mini" #https://platform.openai.com/docs/pricing
+    model = "gpt-4o-mini" #https://platform.openai.com/docs/pricing, we'll eventually use gpt-4o or gpt-4 to be more comparable to paper
     print("Using OpenAI with model: " + model + "\n")
     client = OpenAI(
         api_key=apiKey.apiKeyOpenAI
