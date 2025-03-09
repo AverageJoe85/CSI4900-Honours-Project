@@ -46,7 +46,7 @@ tools = [
                     "remaining_numbers": {
                         "type": "array",
                         "items": { "type": "integer" },
-                        "description": "input_numbers - [number_x and number_y]"
+                        "description": "input_numbers - [number_x and number_y]" #TODO: if number_z matches a remaining number, that number won't be in the array which is obviously not intended (ex. [4, 9, 10, 13] -> 4+9=13 -> [10])
                     }
                 },
                 "required": [
