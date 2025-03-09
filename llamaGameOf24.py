@@ -70,16 +70,18 @@ tools = [
     }
 ]
 
+inputNumbers = [4, 9, 10, 13]
+
 completion = client.chat.completions.create(
     model = model,
     messages=[
         {
             "role": "system",
-            "content": "You must call exactly one tool function per response. You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24. Therefore there will be exactly 3 steps to the game of 24."
+            "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24. The user will tell you the input numbers and you will give potential next steps."
         },
         {
             "role": "user",
-            "content": "Provide a potential first step of the game of 24 with these numbers: (4 9 10 13)."
+            "content": f"Input: {inputNumbers}. Possible next steps:"
         }
     ],
     tools = tools, #required
