@@ -6,20 +6,9 @@ import time
 #apiKeyOpenAI="sk-proj-..."
 import apiKey
 
-useLlamaAPI = 0 #0 = OpenAI, 1 = LlamaAPI
-if useLlamaAPI:
-    model = "llama3.1-70b"
-    print("Using LlamaAPI with model: " + model + "\n")
-    client = OpenAI(
-        api_key=apiKey.apiKey,
-        base_url="https://api.llama-api.com"
-    )
-else:
-    model = "gpt-4o-mini" #https://platform.openai.com/docs/pricing, we'll eventually use gpt-4o or gpt-4 to be more comparable to paper
-    print("Using OpenAI with model: " + model + "\n")
-    client = OpenAI(
-        api_key=apiKey.apiKeyOpenAI
-    )
+model = "gpt-4o-mini" #https://platform.openai.com/docs/pricing, we'll eventually use gpt-4o or gpt-4 to be more comparable to paper
+print("Using OpenAI with model: " + model + "\n")
+client = OpenAI(api_key=apiKey.apiKeyOpenAI)
 
 # Used for knowing how long you'll have to wait on subsequent runs
 startTime = time.time()
@@ -87,12 +76,6 @@ completion = client.chat.completions.create(
     tools = tools, #required
     tool_choice= "required"
 )
-
-if not completion.choices[0].message.tool_calls:    
-    print("No tools were called, I bet Llama is behind this.")
-    endTime = time.time()
-    print("\nExecution Time: " + str(endTime - startTime) + " seconds")
-    exit()
 
 
 
