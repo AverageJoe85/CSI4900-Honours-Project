@@ -61,6 +61,13 @@ tools = [
 
 inputNumbers = [4, 9, 10, 13]
 
+# ===TODO===
+#Need to wrap the completion and output parsing in a for loop that runs 10 (or maybe more?)
+#times. The reason is that we need to pick the top 5 potential first steps (or maybe just
+#the first 5 that are "sure" they can complete). After we generate whatever amount of potential
+#first steps, we evaluate all of them (or again maybe stop early if we have 5 "sure"s). We then
+#go to the next step with those 5 potential steps ArithmeticError(in another loop?).
+
 completion = client.chat.completions.create(
     model = model,
     messages=[
@@ -78,19 +85,11 @@ completion = client.chat.completions.create(
     max_tokens=60 #forces the completion to end at 60 tokens (forces only a single tool call since 1 is about 50 tokens)
 )
 
+# Parsing output
+tool_calls = completion.choices[0].message.tool_calls
+print(f"Number of tool calls: {str(len(tool_calls))}\n") #number of tool calls should be 1 for efficiency
 
-
-# ===========TODO=============
-# Function
-def game24(number_x, operator, number_y, number_z, remaining_numbers):
-    pass
-
-# Passing the output to a function
-tool_call = completion.choices[0].message.tool_calls[0]
-args = json.loads(tool_call.function.arguments)
-result = game24(args["number_x"], args["operator"], args["number_y"], args["number_z"], args["remaining_numbers"])
-
-print("Number of tool calls: " + str(len(completion.choices[0].message.tool_calls)) + "\n") #number of tool calls should be 1 for efficiency
+args = json.loads(tool_calls[0].function.arguments)
 print("input_numbers: " + str(args["input_numbers"]))
 print("number_x: " + str(args["number_x"]))
 print("operator: " + str(args["operator"]))
@@ -99,9 +98,14 @@ print("=")
 print("number_z: " + str(args["number_z"]))
 print("remaining_numbers: " + str(args["remaining_numbers"]))
 
-# Used for knowing how long you'll have to wait on subsequent runs
+
+
+
+
+# DEBUGGING
+# How long did it take to run this program:
 endTime = time.time()
 print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime-startTime)/60) + " minutes")
 
-#debugging to see all tool calls
+# See all tool calls (and entire completion)
 open("debugOutput.txt", "w").write(json.dumps(completion.model_dump(),indent=4))
