@@ -3,7 +3,7 @@ nextStepTools = [
         "type": "function",
         "function": {
             "name": "game24Step",
-            "description": "One step of game of 24. number_x and number_y can be any of the input numbers.",
+            "description": "One step of game of 24. Randomly pick numberX, operator, and numberY.",
             "parameters": {
                 "type": "object", #what other types are there? Should this be changed?
                 "properties": {
@@ -14,7 +14,7 @@ nextStepTools = [
                     },
                     "numberX": {
                         "type": "integer",
-                        "description": "One of the given numbers."
+                        "description": "One of the inputNumbers."
                     },
                     "operator": {
                         "type": "string",
@@ -22,20 +22,15 @@ nextStepTools = [
                     },
                     "numberY": {
                         "type": "integer",
-                        "description": "Another of the given numbers."
+                        "description": "Another of the inputNumbers."
                     },
                     "numberZ": {
                         "type": "integer",
                         "description": "The result of number_x operator number_y."
-                    },
-                    "remainingNumbers": {
-                        "type": "array",
-                        "items": { "type": "integer" },
-                        "description": "inputNumbers - [numberX and numberY]" #TODO: if number_z matches a remaining number, that number won't be in the array which is obviously not intended (ex. [4, 9, 10, 13] -> 4+9=13 -> [10])
-                    }
+                    } #remainingNumbers removed because it was insanely inconsistent. This technically breaks what the paper did but I don't think it matters much in this case.
                 },
                 "required": [
-                    "inputNumbers", "numberX", "operator", "numberY", "numberZ", "remainingNumbers"
+                    "inputNumbers", "numberX", "operator", "numberY", "numberZ"
                 ],
                 "additionalProperties": False #required due to 'strict: True' I believe, but what does this do exactly?
             },
