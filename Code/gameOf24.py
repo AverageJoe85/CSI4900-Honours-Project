@@ -15,20 +15,18 @@ client = OpenAI(api_key=apiKey.apiKeyOpenAI)
 startTime = time.time()
 
 inputNumbers = [4, 9, 10, 13]
-#inputNumbers = [6, 4]
-
-# ===TODO===
-#Need to wrap the completion and output parsing in a for loop that runs 10 (or maybe more?)
-#times. The reason is that we need to pick the top 5 potential first steps (or maybe just
-#the first 5 that are "sure" they can complete). After we generate whatever amount of potential
-#first steps, we evaluate all of them (or again maybe stop early if we have 5 "sure"s). We then
-#go to the next step with those 5 potential steps ArithmeticError(in another loop?).
 
 potentialNextSteps = []
 nextStepEvaluations = []
 promisingSteps = []
 numPotentialSteps = 0
 
+
+#TODO: I think we want to store each potential step with its message history.
+#This is so the LLM has the context of what it's done so far. We need to append the potential step
+#to its personal message history, then append our question of "How likely can this produce a valid solution?".
+#We then append that and ask it for 10 more potential next steps. <-So maybe we should also put
+#the below loop into a function to be called whenever we need the next level of steps.
 while numPotentialSteps < 10:
     completion = client.chat.completions.create(
         model = model,
@@ -54,6 +52,9 @@ while numPotentialSteps < 10:
             print(args)
     print(numPotentialSteps)
 
+
+
+
 ### Parsing output
 ##toolCalls = completion.choices[0].message.tool_calls
 ##print(f"Number of tool calls: {str(len(toolCalls))}\n") #number of tool calls should be 1 for efficiency
@@ -66,8 +67,6 @@ while numPotentialSteps < 10:
 ##print("=")
 ##print("number_z: " + str(args["number_z"]))
 ##print("remaining_numbers: " + str(args["remaining_numbers"]))
-
-
 
 
 
