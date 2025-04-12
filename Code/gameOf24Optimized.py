@@ -1,20 +1,12 @@
+###IMPORTS###
 from openai import OpenAI
 import json
 import time
 import apiKey
 import gameOf24Tools  # Includes nextStepTools and evaluationTools
 
-model = "gpt-4o-mini"
-print("Using OpenAI with model: " + model + "\n")
-client = OpenAI(api_key=apiKey.apiKey)
 
-startTime = time.time()
-
-system_message = {
-    "role": "system",
-    "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24."
-}
-
+###FUNCTIONS###
 # Function to generate possible next steps given the current numbers and conversation history
 def generate_steps(remaining_numbers, message_history):
     steps = [] # store generated steps
@@ -31,7 +23,7 @@ def generate_steps(remaining_numbers, message_history):
         )
 
         assistant_msg = completion.choices[0].message
-        for tool_call in assistant_msg.tool_calls[:-1]:
+        for tool_call in assistant_msg.tool_calls:
             step = json.loads(tool_call.function.arguments)
 
             if not all(k in step for k in ["numberX", "numberY", "operator"]):
@@ -174,6 +166,19 @@ def build_tree(initial_numbers):
     
     return tree
 
+
+
+###MAIN###
+model = "gpt-4o-mini"
+print("Using OpenAI with model: " + model + "\n")
+client = OpenAI(api_key=apiKey.apiKey)
+
+startTime = time.time()
+
+system_message = {
+    "role": "system",
+    "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24."
+}
 # Run the tree
 initial_numbers = [17, 4, 1, 2]
 initial_numbers = [10, 48, 2, 4]
