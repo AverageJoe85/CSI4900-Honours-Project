@@ -13,4 +13,4 @@ else:
     print("Fails +1")
 
 solvePercent = solves / (solves + fails)
-print(f"\nSolve Percentage = %{solvePercent * 100}")
+print(f"\nSolve Percentage = {(solvePercent * 100).2f}%")

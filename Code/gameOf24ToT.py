@@ -229,11 +229,11 @@ def run():
             print("SOLUTION FOUND!")
             print(f"Path: {branch['path']}")
             endTime = time.time() #DEBUG for run time
-            print("Execution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes\n")
+            print("Execution Time: " + str((endTime - startTime) / 60) + " minutes\n")
             return 1
     print("FAILED: NO SOLUTIONS FOUND!")
     endTime = time.time() #DEBUG for run time
-    print("Execution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes\n")
+    print("Execution Time: " + str((endTime - startTime) / 60) + " minutes\n")
     return 0
 
 
