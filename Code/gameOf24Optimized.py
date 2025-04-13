@@ -4,42 +4,43 @@ import json
 import time
 import apiKey
 import gameOf24Tools  # Includes nextStepTools and evaluationTools
+client = OpenAI(api_key=apiKey.apiKey)
+system_message = {
+    "role": "system",
+    "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24."
+}
 
 
 ###FUNCTIONS###
 # Function to generate possible next steps given the current numbers and conversation history
 def generate_steps(remaining_numbers, message_history):
-    steps = [] # store generated steps
-    seen_steps = set() # track unique steps to prevent duplicates
-    attempts = 0
-    max_attempts = 5  # limit to avoid excessive API calls and excessive execution time
+    steps = [] #Return value, stores all generated steps
+    failed_attempts = 0
+    max_failed_attempts = 5  #limit to avoid excessive API calls and excessive execution time
     
-    while len(steps) < 3: # generate up to 3 unique steps
+    while len(steps) < a and failed_attempts < max_failed_attempts: #ideally generate at least 'a' unique steps
+        # Completion is just LLM's response
         completion = client.chat.completions.create(
-            model=model,
+            model=model, #model chosen previously
+            # Attach current node's message history to new query asking for potential next steps so LLM has greater context
             messages=message_history + [{"role": "user", "content": f"Input: {remaining_numbers}. Possible next step:"}],
-            tools=gameOf24Tools.nextStepTools,
-            tool_choice="required"
+            tools=gameOf24Tools.nextStepTools, #use tool defined in other file for generating formatted next steps
+            tool_choice="required" #require the use of the tool so response is formatted
         )
 
-        assistant_msg = completion.choices[0].message
-        for tool_call in assistant_msg.tool_calls:
-            step = json.loads(tool_call.function.arguments)
+        assistant_msg = completion.choices[0].message #Retrieves actual message portion of LLM response, which includes both human readable responses and tool calls 
+        for tool_call in assistant_msg.tool_calls: #Iterates over every tool call
+            step = json.loads(tool_call.function.arguments) #Formats current tool call
 
+            # Confirms all parts of a step are included in current step
             if not all(k in step for k in ["numberX", "numberY", "operator"]):
-                attempts += 1
+                failed_attempts += 1
                 continue
         
             # make sure that numbers used in the step exist in the remaining numbers
             if step["numberX"] not in remaining_numbers or step["numberY"] not in remaining_numbers:
-                attempts += 1
+                failed_attempts += 1
                 continue # skip invalid steps
-            
-            # create a unique signature to avoid duplicate steps
-            step_signature = f"{step['numberX']} {step['operator']} {step['numberY']}"
-            if step_signature in seen_steps:
-                attempts += 1
-                continue # skip already generated steps
             
             # calculate result of the operation
             if step["operator"] == "+":
@@ -51,7 +52,7 @@ def generate_steps(remaining_numbers, message_history):
             elif step["operator"] == "/":
                 result = step["numberX"] / step["numberY"] if step["numberY"] != 0 else float("inf")
             else:
-                attempts += 1
+                failed_attempts += 1
                 continue 
             
             step["numberZ"] = result # store result
@@ -62,10 +63,8 @@ def generate_steps(remaining_numbers, message_history):
                 "content": json.dumps({"numberZ": result}),
                 "tool_call_id": tool_call.id
             }
-            step_history = message_history + [assistant_msg, tool_response] # update history
+            step_history = message_history + [step] # update history
             steps.append({"step": step, "history": step_history})
-            #seen_steps.add(step_signature) # mark step as seen
-            attempts += 1
     
     return steps
 
@@ -73,7 +72,7 @@ def generate_steps(remaining_numbers, message_history):
 def evaluate_step(step, path, remaining):
     eval_history = [
         system_message,
-        {"role": "user", "content": f"Given the path so far: {path}, and remaining numbers: {remaining}, evaluate this step: {step['numberX']} {step['operator']} {step['numberY']} = {step['numberZ']}. How likely can it lead to 24? Consider if the result is too big or too small to reach 24 with the remaining numbers."}
+        {"role": "user", "content": f"Given the steps so far: {path}, and remaining numbers: {remaining}, evaluate how likey this step will reach 24: {step['numberX']} {step['operator']} {step['numberY']} = {step['numberZ']}. Consider if the result is too big or too small to reach 24 with the remaining numbers."}
     ]
     completion = client.chat.completions.create(
         model=model,
@@ -81,15 +80,8 @@ def evaluate_step(step, path, remaining):
         tools=gameOf24Tools.evaluationTools,
         tool_choice="required"
     )
-    assistant_msg = completion.choices[0].message
-    tool_call = assistant_msg.tool_calls[0]
-    score = json.loads(tool_call.function.arguments)["stepPotential"] # extract evaluation scoree
-    
-    tool_response = {
-        "role": "tool",
-        "content": json.dumps({"stepPotential": score}),
-        "tool_call_id": tool_call.id
-    }
+    tool_call = completion.choices[0].message.tool_calls[0]
+    score = json.loads(tool_call.function.arguments)["stepPotential"] # extract evaluation score
     return score
 
 # Function to update the list of remaining numbers after a step
@@ -103,14 +95,17 @@ def calculate_remaining_numbers(remaining_numbers, step):
     return current_nums
 
 # Function to build the solution tree
-def build_tree(initial_numbers):
-    tree = []
+def build_tree(initial_numbers, b, system_message):
+    tree = [] #return value (saves top 'b' nodes of each step level
+    # Initializes current_level with 4 given numbers, the message history (for LLM's ability to read its
+    #previous replies in branch), and an empty path array. At level 0, there's only one node (the root node)
+    #which has the initial 4 numbers, a message history with just the system message, and an empty path (since
+    #there are no ndoes before it in the tree). Current level is repalced at each level of nodes.
     current_level = [{"remaining": initial_numbers, "history": [system_message], "path": []}]
-    b = 5  # Keep top 5 branches per level
     
-    for level in range(3): # three levels to reah a single number
-        candidates = []
-        expected_remaining_count = 4 - (level + 1)
+    for level in range(3): #3 steps are always required to reach a final result (level 1, 2, and 3)
+        candidates = [] #Filled with all potential next steps, then later trimmed to the 'b' top potential steps
+        expected_remaining_count = 4 - (level + 1) #For pruning a node if a it lost remaining numbers somewhere
         
         # Generate all possible steps for the current level
         for branch in current_level:
@@ -122,6 +117,7 @@ def build_tree(initial_numbers):
                 })
                 continue
             
+            # Takes current node (branch) and generates potential next steps
             steps = generate_steps(branch["remaining"], branch["history"])
             for step_data in steps:
                 step = step_data["step"]
@@ -131,9 +127,6 @@ def build_tree(initial_numbers):
                 
                 new_path = branch["path"] + [f"{step['numberX']} {step['operator']} {step['numberY']} = {step['numberZ']}"]
                 score = evaluate_step(step, new_path, remaining)
-                
-                if score == 0:  # get rid of impossible steps
-                    continue
                 
                 # calculate proximity to 24 as a tiebreaker
                 proximity = abs(step["numberZ"] - 24)
@@ -160,37 +153,36 @@ def build_tree(initial_numbers):
         current_level = next_level
         tree.append(current_level)
         
-        print(f"\nLevel {level + 1}:")
+        print(f"\nLevel {level + 1} Top {b} Steps:")
         for branch in current_level:
             print(f"Path: {branch['path']}, Remaining: {branch['remaining']}, Score: {branch['score']}")
     
     return tree
 
+def run():
+    print("Using OpenAI with model: " + model + "\n") #Prints which model was chosen
+    
+    # Run the tree
+    print(f"Starting with numbers: {gameOf24Numbers}") #Prints which 4 numbers were chosen
+    tree = build_tree(gameOf24Numbers, b, system_message) #Creates a tree of thought
+
+    # Prints all final steps (and the paths they took) and tags them as "Solution Found" if they reached 24
+    print("\nFinal Results:")
+    for branch in tree[-1]:
+        final_num = branch["remaining"][0] if branch["remaining"] else None #confirms that the branch didn't glitch and actually has a final result
+        print(f"Path: {branch['path']},\n   Final Number: {final_num},\n   Score: {branch['score']}")
+        if final_num == 24:
+            print("  ===SOLUTION!===") #Tags step as "Solution Found" if it reached 24
 
 
-###MAIN###
-model = "gpt-4o-mini"
-print("Using OpenAI with model: " + model + "\n")
-client = OpenAI(api_key=apiKey.apiKey)
 
-startTime = time.time()
+###PARAMETERS###
+model = "gpt-4o-mini" #LLM model to use (https://platform.openai.com/docs/pricing)
+a = 5 #Least number of potential next steps to generate at each tree node
+b = 5  #Number of best potential next steps to keep per step
+gameOf24Numbers = [10, 48, 2, 4] #The four numbers used in the game of 24
 
-system_message = {
-    "role": "system",
-    "content": "You are an expert in solving game of 24 steps. The game of 24 works like this: You are given four numbers and must make the number 24 from them. You can add or subtract or multiply or divide using all four numbers but use each number only once. At step 1 there are 4 numbers initially which will turn into 3 numbers, step 2 will turn those 3 into 2, and finally step 3 will turn those 2 numbers into 1, which should be 24."
-}
-# Run the tree
-initial_numbers = [17, 4, 1, 2]
-initial_numbers = [10, 48, 2, 4]
-print(f"Starting with numbers: {initial_numbers}")
-tree = build_tree(initial_numbers)
-
-print("\nFinal Results:")
-for branch in tree[-1]:
-    final_num = branch["remaining"][0] if branch["remaining"] else None
-    print(f"Path: {branch['path']}, Final Number: {final_num}, Score: {branch['score']}")
-    if final_num == 24:
-        print("Solution found")
-
-endTime = time.time()
+startTime = time.time() #DEBUG for run time
+run() #Initiates program
+endTime = time.time() #DEBUG for run time
 print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
