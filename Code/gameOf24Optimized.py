@@ -102,8 +102,11 @@ def build_tree(initial_numbers, b, system_message):
     #which has the initial 4 numbers, a message history with just the system message, and an empty path (since
     #there are no ndoes before it in the tree). Current level is repalced at each level of nodes.
     current_level = [{"remaining": initial_numbers, "history": [system_message], "path": []}]
-    
-    for level in range(3): #3 steps are always required to reach a final result (level 1, 2, and 3)
+
+    # 3 steps are always required to reach a final result (level 1, 2, and 3),
+    #but step 3 doesn't require a call to evaluate_step
+    # STEP 1 AND 2
+    for level in range(2):
         candidates = [] #Filled with all potential next steps, then later trimmed to the 'b' top potential steps
         expected_remaining_count = 4 - (level + 1) #For pruning a node if a it lost remaining numbers somewhere
         
@@ -156,6 +159,51 @@ def build_tree(initial_numbers, b, system_message):
         print(f"\nLevel {level + 1} Top {b} Steps:")
         for branch in current_level:
             print(f"Path: {branch['path']}, Remaining: {branch['remaining']}, Score: {branch['score']}")
+
+    # STEP 3
+    candidates = [] #Filled with all potential next steps, then later trimmed to the 'b' top potential steps
+    expected_remaining_count = 1 #For pruning a node if a it lost remaining numbers somewhere
+    
+    # Generate all possible steps for the current level
+    for branch in current_level:
+        if len(branch["remaining"]) <= 1:
+            candidates.append({
+                "branch": branch,
+                "score": branch.get("score", 0),
+                "proximity": 0  # default for branches already at 1 number
+            })
+            continue
+        
+        # Takes current node (branch) and generates potential next steps
+        steps = generate_steps(branch["remaining"], branch["history"])
+        for step_data in steps:
+            step = step_data["step"]
+            remaining = calculate_remaining_numbers(branch["remaining"], step)
+            if len(remaining) != expected_remaining_count:
+                continue
+            
+            new_path = branch["path"] + [f"{step['numberX']} {step['operator']} {step['numberY']} = {step['numberZ']}"]
+            
+            # calculate proximity to 24 as a tiebreaker
+            proximity = abs(step["numberZ"] - 24)
+            
+            candidates.append({
+                "branch": {
+                    "remaining": remaining,
+                    "history": [
+                        system_message,
+                        {"role": "user", "content": f"Previous steps: {new_path}"}
+                    ],
+                    "path": new_path,
+                    "score": score
+                },
+                "score": score,
+                "proximity": proximity
+            })
+    
+    # Keep all branches
+    current_level = [candidate["branch"] for candidate in candidates]
+    tree.append(current_level)
     
     return tree
 
@@ -170,9 +218,12 @@ def run():
     print("\nFinal Results:")
     for branch in tree[-1]:
         final_num = branch["remaining"][0] if branch["remaining"] else None #confirms that the branch didn't glitch and actually has a final result
-        print(f"Path: {branch['path']},\n   Final Number: {final_num},\n   Score: {branch['score']}")
+        # If a branch reached 24, ToT was successful, and the program can stop
         if final_num == 24:
-            print("  ===SOLUTION!===") #Tags step as "Solution Found" if it reached 24
+            print("SOLUTION FOUND!")
+            print(f"Path: {branch['path']},\n   Final Number: {final_num},\n   Score: {branch['score']}")
+            return
+    print("FAILED: NO SOLUTIONS FOUND!")
 
 
 
