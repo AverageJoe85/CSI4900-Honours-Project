@@ -209,11 +209,12 @@ def build_tree(initial_numbers, b, system_message):
     return tree
 
 def run():
+    startTime = time.time() #DEBUG for run time
     print("Using OpenAI with model: " + model + "\n") #Prints which model was chosen
     
     # Run the tree
-    print(f"Starting with numbers: {gameOf24Numbers}") #Prints which 4 numbers were chosen
-    tree = build_tree(gameOf24Numbers, b, system_message) #Creates a tree of thought
+    print(f"Starting with numbers: {numbers}") #Prints which 4 numbers were chosen
+    tree = build_tree(numbers, b, system_message) #Creates a tree of thought
 
     # Prints all final steps (and the paths they took) and tags them as "Solution Found" if they reached 24
     print("\nFinal Results:")
@@ -223,8 +224,11 @@ def run():
         if final_num == 24:
             print("SOLUTION FOUND!")
             print(f"Path: {branch['path']},\n   Final Number: {final_num},\n   Score: {branch['score']}")
-            return
+            return 1
+    return 0
     print("FAILED: NO SOLUTIONS FOUND!")
+    endTime = time.time() #DEBUG for run time
+    print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
 
 
 
@@ -232,9 +236,12 @@ def run():
 model = "gpt-4o-mini" #LLM model to use (https://platform.openai.com/docs/pricing)
 a = 5 #Least number of potential next steps to generate at each tree node
 b = 5  #Number of best potential next steps to keep per step
-gameOf24Numbers = [10, 48, 2, 4] #The four numbers used in the game of 24
+numbers = [10, 48, 2, 4] #The four numbers used in the game of 24
 
-startTime = time.time() #DEBUG for run time
-run() #Initiates program
-endTime = time.time() #DEBUG for run time
-print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
+
+
+# This only executes if this file is run directly.
+#If this file is imported then you must run gameOf24Optimized.run()
+if __name__ == "__main__":
+    run() #Initiates program
+
