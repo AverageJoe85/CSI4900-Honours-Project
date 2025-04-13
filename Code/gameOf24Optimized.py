@@ -227,11 +227,13 @@ def run():
         if final_num == 24:
             print("SOLUTION FOUND!")
             print(f"Path: {branch['path']}")
+            endTime = time.time() #DEBUG for run time
+            print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
             return 1
-    return 0
     print("FAILED: NO SOLUTIONS FOUND!")
     endTime = time.time() #DEBUG for run time
     print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
+    return 0
 
 
 
