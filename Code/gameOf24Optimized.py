@@ -219,8 +219,9 @@ def run():
     print(f"Starting with numbers: {numbers}") #Prints which 4 numbers were chosen
     tree = build_tree(numbers, b, system_message) #Creates a tree of thought
 
-    # Prints all final steps (and the paths they took) and tags them as "Solution Found" if they reached 24
-    print("\nFinal Results:")
+    if __name__ == "__main__":
+        # Prints all final steps (and the paths they took) and tags them as "Solution Found" if they reached 24
+        print("\nFinal Results:")
     for branch in tree[-1]:
         final_num = branch["remaining"][0] if branch["remaining"] else None #confirms that the branch didn't glitch and actually has a final result
         # If a branch reached 24, ToT was successful, and the program can stop
@@ -228,11 +229,11 @@ def run():
             print("SOLUTION FOUND!")
             print(f"Path: {branch['path']}")
             endTime = time.time() #DEBUG for run time
-            print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
+            print("Execution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
             return 1
     print("FAILED: NO SOLUTIONS FOUND!")
     endTime = time.time() #DEBUG for run time
-    print("\nExecution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes")
+    print("Execution Time: " + str(endTime - startTime) + " seconds, or " + str((endTime - startTime) / 60) + " minutes\n")
     return 0
 
 
