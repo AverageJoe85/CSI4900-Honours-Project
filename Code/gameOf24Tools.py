@@ -50,7 +50,7 @@ evaluationTools = [
                 "properties": {
                     "stepPotential": {
                         "type": "integer",
-                        "description": "Based on how likely a step is to lead to a valid solution to the game of 24, choose 2 for 'likely', 1 for 'maybe', or 0 for 'unlikely'."
+                        "description": "Based on how likely a step is to lead to a valid solution to the game of 24, choose 2 for 'sure', 1 for 'maybe', or 0 for 'unlikely'."
                     }
                 },
                 "required": [
