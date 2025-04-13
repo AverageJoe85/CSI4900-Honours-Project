@@ -1,11 +1,11 @@
-import gameOf24Optimized
+import gameOf24ToT
 
-gameOf24Optimized.numbers = [1, 1, 4, 6]
+gameOf24ToT.numbers = [1, 1, 4, 6]
 
 
 solves = 0
 fails = 0
-if gameOf24Optimized.run():
+if gameOf24ToT.run():
     solves += 1
     print("Solves +1")
 else:
