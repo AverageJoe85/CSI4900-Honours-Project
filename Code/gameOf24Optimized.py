@@ -155,10 +155,11 @@ def build_tree(initial_numbers, b, system_message):
         
         current_level = next_level
         tree.append(current_level)
-        
-        print(f"\nLevel {level + 1} Top {b} Steps:")
-        for branch in current_level:
-            print(f"Path: {branch['path']}, Remaining: {branch['remaining']}, Score: {branch['score']}")
+
+        if __name__ == "__main__":
+            print(f"\nLevel {level + 1} Top {b} Steps:")
+            for branch in current_level:
+                print(f"Path: {branch['path']}, Remaining: {branch['remaining']}, Score: {branch['score']}")
 
     # STEP 3
     candidates = [] #Filled with all potential next steps, then later trimmed to the 'b' top potential steps
@@ -204,13 +205,15 @@ def build_tree(initial_numbers, b, system_message):
     # Keep all branches
     current_level = [candidate["branch"] for candidate in candidates]
     tree.append(current_level)
-    print(f"\nLevel 3 Finished Generating Steps")
+    if __name__ == "__main__":
+        print(f"\nLevel 3 Finished Generating Steps")
     
     return tree
 
 def run():
     startTime = time.time() #DEBUG for run time
-    print("Using OpenAI with model: " + model + "\n") #Prints which model was chosen
+    if __name__ == "__main__":
+        print("Using OpenAI with model: " + model + "\n") #Prints which model was chosen
     
     # Run the tree
     print(f"Starting with numbers: {numbers}") #Prints which 4 numbers were chosen
@@ -223,7 +226,7 @@ def run():
         # If a branch reached 24, ToT was successful, and the program can stop
         if final_num == 24:
             print("SOLUTION FOUND!")
-            print(f"Path: {branch['path']},\n   Final Number: {final_num},\n   Score: {branch['score']}")
+            print(f"Path: {branch['path']}")
             return 1
     return 0
     print("FAILED: NO SOLUTIONS FOUND!")
