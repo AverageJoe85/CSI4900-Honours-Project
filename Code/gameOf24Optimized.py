@@ -204,6 +204,7 @@ def build_tree(initial_numbers, b, system_message):
     # Keep all branches
     current_level = [candidate["branch"] for candidate in candidates]
     tree.append(current_level)
+    print(f"\nLevel 3 Finished Generating Steps")
     
     return tree
 
