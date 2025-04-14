@@ -229,7 +229,7 @@ def run():
             print("SOLVED")
             print(f"Path: {branch['path']}")
             endTime = time.time() #DEBUG for run time
-            print("Execution Time: " + str((endTime - startTime) / 60) + " minutes\n")
+            print("Execution Time: " + str((endTime - startTime) / 60) + " minutes")
             return 1
     print("NO SOLUTION FOUND")
     endTime = time.time() #DEBUG for run time
@@ -240,7 +240,7 @@ def run():
 
 ###PARAMETERS###
 model = "gpt-4o-mini" #LLM model to use (https://platform.openai.com/docs/pricing)
-a = 5 #Least number of potential next steps to generate at each tree node
+a = 3 #Least number of potential next steps to generate at each tree node
 b = 5  #Number of best potential next steps to keep per step
 numbers = [10, 48, 2, 4] #The four numbers used in the game of 24
 
