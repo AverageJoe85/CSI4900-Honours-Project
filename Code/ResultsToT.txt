@@ -7,6 +7,8 @@ x%
 (Second: 44.5 minutes) 30%
 (Third: 64.5 minutes) 0%
 (Fourth: 29 minutes) 20%
+(Fifth: 29 minutes) 20%
+(Sixth: 24 minutes) 30%
 =======CONSOLE OUTPUT=======
 Numbers: [4, 6, 7, 10]
 NO SOLUTION FOUND
@@ -147,3 +149,94 @@ NO SOLUTION FOUND
 Fails +1
 
 Solve Percentage = 20.00%
+
+Numbers: [2, 3, 9, 10]
+NO SOLUTION FOUND
+Execution Time: 6.238859085241954 minutes
+Fails +1
+Numbers: [5, 6, 7, 13]
+SOLVED
+Path: ['5 * 6 = 30', '30 - 13 = 17', '7 + 17 = 24']
+Execution Time: 6.564216049512227 minutes
+Solves +1
+Numbers: [1, 2, 7, 11]
+NO SOLUTION FOUND
+Execution Time: 2.5150400479634603 minutes
+Fails +1
+Numbers: [2, 5, 10, 10]
+NO SOLUTION FOUND
+Execution Time: 1.521097727616628 minutes
+Fails +1
+Numbers: [6, 7, 8, 11]
+NO SOLUTION FOUND
+Execution Time: 6.030045847098033 minutes
+Fails +1
+Numbers: [6, 9, 9, 11]
+NO SOLUTION FOUND
+Execution Time: 0.8050294240315755 minutes
+Fails +1
+Numbers: [6, 11, 12, 13]
+NO SOLUTION FOUND
+Execution Time: 1.6619576891263326 minutes
+Fails +1
+Numbers: [1, 2, 3, 13]
+NO SOLUTION FOUND
+Execution Time: 0.8814813693364462 minutes
+Fails +1
+Numbers: [6, 7, 10, 12]
+SOLVED
+Path: ['7 * 12 = 84', '84 / 6 = 14.0', '10 + 14 = 24']
+Execution Time: 1.2836024363835652 minutes
+Solves +1
+Numbers: [1, 7, 10, 13]
+NO SOLUTION FOUND
+Execution Time: 1.736468215783437 minutes
+Fails +1
+
+Solve Percentage = 20.00%
+
+Numbers: [1, 4, 4, 11]
+NO SOLUTION FOUND
+Execution Time: 1.3700162728627523 minutes
+Fails +1
+Numbers: [3, 4, 6, 8]
+NO SOLUTION FOUND
+Execution Time: 1.1594191789627075 minutes
+Fails +1
+Numbers: [2, 3, 6, 13]
+SOLVED
+Path: ['2 + 3 = 5', '13 + 6 = 19', '5 + 19 = 24']
+Execution Time: 1.5924902518590291 minutes
+Solves +1
+Numbers: [2, 5, 7, 7]
+SOLVED
+Path: ['5 * 2 = 10', '10 + 7 = 17', '17 + 7 = 24']
+Execution Time: 6.189046406745911 minutes
+Solves +1
+Numbers: [5, 10, 12, 13]
+NO SOLUTION FOUND
+Execution Time: 1.8162587920824687 minutes
+Fails +1
+Numbers: [1, 3, 8, 13]
+SOLVED
+Path: ['8 + 13 = 21', '21 + 3 = 24', '1 * 24 = 24']
+Execution Time: 1.302570672829946 minutes
+Solves +1
+Numbers: [1, 2, 2, 9]
+NO SOLUTION FOUND
+Execution Time: 1.6342640360196432 minutes
+Fails +1
+Numbers: [1, 2, 6, 10]
+NO SOLUTION FOUND
+Execution Time: 5.958295925458272 minutes
+Fails +1
+Numbers: [1, 9, 10, 13]
+NO SOLUTION FOUND
+Execution Time: 1.720503314336141 minutes
+Fails +1
+Numbers: [6, 10, 12, 13]
+NO SOLUTION FOUND
+Execution Time: 1.197978432973226 minutes
+Fails +1
+
+Solve Percentage = 30.00%
