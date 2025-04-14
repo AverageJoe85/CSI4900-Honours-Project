@@ -216,7 +216,7 @@ def run():
         print("Using OpenAI with model: " + model + "\n") #Prints which model was chosen
     
     # Run the tree
-    print(f"Starting with numbers: {numbers}") #Prints which 4 numbers were chosen
+    print(f"Numbers: {numbers}") #Prints which 4 numbers were chosen
     tree = build_tree(numbers, b, system_message) #Creates a tree of thought
 
     if __name__ == "__main__":
@@ -226,12 +226,12 @@ def run():
         final_num = branch["remaining"][0] if branch["remaining"] else None #confirms that the branch didn't glitch and actually has a final result
         # If a branch reached 24, ToT was successful, and the program can stop
         if final_num == 24:
-            print("SOLUTION FOUND!")
+            print("SOLVED")
             print(f"Path: {branch['path']}")
             endTime = time.time() #DEBUG for run time
             print("Execution Time: " + str((endTime - startTime) / 60) + " minutes\n")
             return 1
-    print("FAILED: NO SOLUTIONS FOUND!")
+    print("NO SOLUTION FOUND")
     endTime = time.time() #DEBUG for run time
     print("Execution Time: " + str((endTime - startTime) / 60) + " minutes\n")
     return 0
