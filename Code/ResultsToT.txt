@@ -1,6 +1,6 @@
 SOLVED PERCENTAGE FROM TESTS:
-x%
-(x out 100 games of 24)
+20%
+(20 out 100 games of 24)
 
 
 (WARNING: First batch of 10 tests took 39 minutes) 30%
@@ -12,6 +12,7 @@ x%
 (Seventh: 23 minutes) 20%
 (Eighth: 42 minutes) 30%
 (Ninth: 36 minutes) 10%
+(Tenth: 55 Minutes) 10%
 =======CONSOLE OUTPUT=======
 Numbers: [4, 6, 7, 10]
 NO SOLUTION FOUND
@@ -339,3 +340,46 @@ Fails +1
 
 Solve Percentage = 10.00%
 
+Numbers: [2, 4, 9, 12]
+NO SOLUTION FOUND
+Execution Time: 5.50192201534907 minutes
+Fails +1
+Numbers: [8, 8, 10, 12]
+NO SOLUTION FOUND
+Execution Time: 1.0062577803929647 minutes
+Fails +1
+Numbers: [2, 3, 4, 5]
+NO SOLUTION FOUND
+Execution Time: 10.669743776321411 minutes
+Fails +1
+Numbers: [4, 10, 12, 13]
+NO SOLUTION FOUND
+Execution Time: 5.0016514698664345 minutes
+Fails +1
+Numbers: [2, 3, 3, 10]
+NO SOLUTION FOUND
+Execution Time: 11.003336322307586 minutes
+Fails +1
+Numbers: [1, 5, 12, 12]
+NO SOLUTION FOUND
+Execution Time: 5.186997346083323 minutes
+Fails +1
+Numbers: [3, 9, 10, 13]
+NO SOLUTION FOUND
+Execution Time: 1.31834503809611 minutes
+Fails +1
+Numbers: [4, 4, 5, 11]
+SOLVED
+Path: ['4 + 11 = 15', '15 + 5 = 20', '20 + 4 = 24']
+Execution Time: 1.182540734608968 minutes
+Solves +1
+Numbers: [2, 4, 4, 6]
+NO SOLUTION FOUND
+Execution Time: 6.142765001455943 minutes
+Fails +1
+Numbers: [4, 4, 9, 12]
+NO SOLUTION FOUND
+Execution Time: 8.728732093175251 minutes
+Fails +1
+
+Solve Percentage = 10.00%
