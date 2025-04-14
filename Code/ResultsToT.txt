@@ -1,0 +1,6 @@
+SOLVED PERCENTAGE FROM TESTS:
+x%
+(x out 100 games of 24)
+
+
+=======CONSOLE OUTPUT=======
