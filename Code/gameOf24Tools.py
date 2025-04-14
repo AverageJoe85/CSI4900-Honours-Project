@@ -62,3 +62,61 @@ evaluationTools = [
         }
     }
 ]
+
+inputOutputTools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "solve",
+            "description": "Give a series of equations using each of the 4 input numbers only once. Subsequent equations can use the result of previous equations, but only once.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "firstEquationFirstNumber": {
+                        "type": "integer",
+                        "description": "First number of first equation"
+                    },
+                    "firstEquationOperator": {
+                        "type": "string",
+                        "description": "Operator of first equation. Can be +, -, *, or /."
+                    },
+                    "firstEquationSecondNumber": {
+                        "type": "integer",
+                        "description": "Second number of first equation"
+                    },
+                    "secondEquationFirstNumber": {
+                        "type": "integer",
+                        "description": "First number of second equation"
+                    },
+                    "secondEquationOperator": {
+                        "type": "string",
+                        "description": "Operator of second equation. Can be +, -, *, or /."
+                    },
+                    "secondEquationSecondNumber": {
+                        "type": "integer",
+                        "description": "Second number of second equation"
+                    },
+                    "thirdEquationFirstNumber": {
+                        "type": "integer",
+                        "description": "First number of third equation"
+                    },
+                    "thirdEquationOperator": {
+                        "type": "string",
+                        "description": "Operator of third equation. Can be +, -, *, or /."
+                    },
+                    "thirdEquationSecondNumber": {
+                        "type": "integer",
+                        "description": "Second number of third equation"
+                    },
+                },
+                "required": [
+                    "firstEquationFirstNumber", "firstEquationOperator", "firstEquationSecondNumber",
+                    "secondEquationFirstNumber", "secondEquationOperator", "secondEquationSecondNumber",
+                    "thirdEquationFirstNumber", "thirdEquationOperator", "thirdEquationSecondNumber"
+                ],
+                "additionalProperties": False
+            },
+            "strict": True
+        }
+    }
+]
