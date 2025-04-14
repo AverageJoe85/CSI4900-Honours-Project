@@ -4,7 +4,7 @@ import examples
 def run(start,end):
     solves = 0
     fails = 0
-    for numbers in examples.examples[start:end]:
+    for numbers in examples.examples[start-1:end-1]:
         gameOf24ToT.numbers = numbers
         if gameOf24ToT.run():
             solves += 1
