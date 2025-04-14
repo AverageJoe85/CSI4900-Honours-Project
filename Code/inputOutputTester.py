@@ -13,7 +13,7 @@ def run(start,end):
             fails += 1
             print("Fails +1")
     solvePercent = solves / (solves + fails)
-    print(f"\nSolve Percentage ({start}, {end})= {(solvePercent * 100):.2f}%\n")
+    print(f"\nSolve Percentage ({start}, {end - 1})= {(solvePercent * 100):.2f}%\n")
 
 run(901,911)
 run(911,921)
