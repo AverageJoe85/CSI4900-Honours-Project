@@ -1,19 +1,19 @@
-import gameOf24ToT
+import gameOf24IO
 import examples
 
 def run(start,end):
     solves = 0
     fails = 0
     for numbers in examples.examples[start:end]:
-        gameOf24ToT.numbers = numbers
-        if gameOf24ToT.run():
+        gameOf24IO.numbers = numbers
+        if gameOf24IO.run():
             solves += 1
             print("Solves +1")
         else:
             fails += 1
             print("Fails +1")
     solvePercent = solves / (solves + fails)
-    print(f"\nSolve Percentage = {(solvePercent * 100):.2f}%\n")
+    print(f"\nSolve Percentage ({start}, {end})= {(solvePercent * 100):.2f}%\n")
 
 run(901,911)
 run(911,921)
